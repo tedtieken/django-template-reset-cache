@@ -1,0 +1,44 @@
+This tag adds the ability to easily reset the template cache for a given set of arguments, from the template or from views.
+
+
+How to use.
+
+Copy reset_cache.py to wherever you manage template tags.  If you don't already have a folder for template tags https://docs.djangoproject.com/en/dev/howto/custom-template-tags/
+
+    Usage::
+
+        {% load reset_cache %}
+        {% if [condition] %}
+            {% reset_cache [fragment_name] %}
+        {% endif %}
+
+    This tag also allows resetting a cache key that was varried by a list of arguments::
+
+        {% load reset_cache %}
+        {% if [condition] %}
+            {% reset_cache [fragment_name] [var1] [var2] ..  %}
+        {% endif %}
+
+        
+    Which follows the built-in cache template tag structure
+
+        {% load cache %}
+        {% cache [expire_time] [fragment_name] %}
+            .. some expensive processing ..
+        {% endcache %}
+
+        {% load cache %}
+        {% cache [expire_time] [fragment_name] [var1] [var2] .. %}
+            .. some expensive processing ..
+        {% endcache %}
+
+    Note that the reset_cache doesn't pass the [expire_time] variable
+    
+    
+Also, you can import the invalidate_template_cache function into your views
+    from whereiputit.templatetags.reset_cache import invalidate_template_cache
+    
+    def myview(request, *args, **kwargs):
+        ...
+        invalidate_template_cache("fragment_name", *[var1, var2, ...])
+        ...
